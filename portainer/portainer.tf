@@ -1,21 +1,34 @@
-provider "docker" {}
-resource "docker_container" "portainer" {
-  name = "portainer"
-  image = "portainer/portainer:latest"
+provider "docker" {
+  host = "ssh://user@somehost:22"
 
-  ports {
-    internal = "9000"
-    external = "9000"
-  }
- 
-  ports {
-    internal = "8000"
-    external = "8000"
+resource "docker_service" "portainer" {
+  name = "portainer-service"
+
+  task_spec {
+    container_spec {
+      image = "portainer/portainer:latest"
+
+      mounts = [
+        {
+          target    = "/data"
+          source    = "portainer_data"
+          type      = "volume"
+          read_only = false
+        },
+      ]
+    }
   }
 
-  volumes {
-    volume_name = "portainer_data"
-    container_path = "/data"
+  placement {
+   constraints = [
+      "node.role==manager",
+    ]
+    }
+  
+  endpoint_spec {
+    ports {
+      target_port = "9000"
+    }
   }
-
+}
 }
