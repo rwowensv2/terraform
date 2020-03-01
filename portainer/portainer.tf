@@ -1,6 +1,4 @@
-provider "docker" {
-  host = "ssh://user@somehost:22"
-
+provider "docker" {}
 resource "docker_service" "portainer" {
   name = "portainer-service"
 
@@ -23,12 +21,11 @@ resource "docker_service" "portainer" {
    constraints = [
       "node.role==manager",
     ]
-    }
+  }
   
   endpoint_spec {
     ports {
       target_port = "9000"
     }
   }
-}
 }
