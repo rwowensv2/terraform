@@ -36,3 +36,5 @@ $ docker exec 5dc9d9597093 cat /var/jenkins_home/secrets/initialAdminPassword
 1346c41841194e37ae731effaeb9839e
 ```
 
+# Portainer
+`docker stack deploy --compose-file=portainer-agent-stack.yml portainer`
