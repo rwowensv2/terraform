@@ -24,7 +24,7 @@ resource "docker_service" "portainer" {
       mounts {
           target    = "/var/run/docker.sock"
           source    = "/var/run/docker.sock"
-          type      = "volume"
+          type      = "bind"
       }
     }
 
