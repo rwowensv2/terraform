@@ -6,6 +6,11 @@ resource "docker_service" "portainer" {
     container_spec {
       image = "portainer/portainer:latest"
     }
+    
+    placement {
+      constraints = ["node.role==manager"]
+    }
+    
   }
   
   endpoint_spec {
