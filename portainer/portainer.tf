@@ -1,32 +1,21 @@
 provider "docker" {}
+resource "docker_container" "portainer" {
+  name = "portainer"
+  image = "portainer/portainer:latest"
 
-resource "docker_volume" "portainer_volume" {
-  name = "portainer_data"
-}
-
-resource "docker_service" "portainer" {
-  name = "portainer-service"
-
-  task_spec {
-    container_spec {
-      image = "portainer/portainer:latest"
-    
-      mounts {
-          target    = "/data"
-          source    = "portainer_data"
-          type      = "volume"
-      }
-    }
-
-    placement {
-      constraints = ["node.role==manager"]
-    }
-    
+  ports {
+    internal = "9000"
+    external = "9000"
   }
-  
-  endpoint_spec {
-    ports {
-      target_port = "9000"
-    }
+ 
+  ports {
+    internal = "8000"
+    external = "8000"
   }
+
+  volumes {
+    volume_name = "portainer_home"
+    container_path = "/data"
+  }
+
 }
