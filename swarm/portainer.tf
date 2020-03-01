@@ -4,6 +4,10 @@ resource "docker_volume" "portainer_volume" {
   name = "portainer_data"
 }
 
+#resource "docker_volume" "portainer_socket" {
+#  name = "portainer_socket"
+#}
+
 resource "docker_service" "portainer" {
   name = "portainer-service"
 
@@ -16,6 +20,12 @@ resource "docker_service" "portainer" {
           source    = "portainer_data"
           type      = "volume"
       }
+
+      mounts {
+          target    = "/var/run/docker.sock"
+          source    = "/var/run/docker.sock"
+          type      = "volume"
+      }
     }
 
     placement {
@@ -26,7 +36,13 @@ resource "docker_service" "portainer" {
   
   endpoint_spec {
     ports {
-      target_port = "9000"
+      target_port     = "9000"
+      published_port  = "9000"
+    }
+
+    ports {
+      target_port     = "8000"
+      published_port  = "8000"
     }
   }
 }
