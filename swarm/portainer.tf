@@ -4,10 +4,6 @@ resource "docker_volume" "portainer_volume" {
   name = "portainer_data"
 }
 
-#resource "docker_volume" "portainer_socket" {
-#  name = "portainer_socket"
-#}
-
 resource "docker_service" "portainer" {
   name = "portainer-service"
 
