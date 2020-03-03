@@ -46,6 +46,10 @@ mode {
   }
 }
 
+#resource "docker_volume" "portainer_socket" {
+#  name = "portainer_socket"
+#}
+
 resource "docker_service" "portainer" {
   name = "portainer-service"
 
