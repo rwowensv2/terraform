@@ -3,24 +3,18 @@ provider "docker" {}
 resource "docker_volume" "portainer_volume" {
   name = "portainer_data"
 }
-resource "docker-network" "port-network" {
+resource "docker_network" "port-network" {
   name    = "portainer_agent_network"
   driver  = "overlay"
 }
 
-resource "docker-network" "traefik" {
+resource "docker_network" "traefik" {
   name    = "traefik-net"
   driver  = "overlay"
 }
 
 resource "docker_service" "portainer_agent" {
   name = "portainer-agent"
-
-#    - name: create portainer network
-#      docker_network:
-#        name: portainer_agent_network
-#        driver: overlay
-#        attachable: yes
 
   task_spec {
     container_spec {
@@ -57,7 +51,7 @@ resource "docker_service" "portainer" {
           target    = "/data"
           source    = "portainer_data"
           type      = "volume"
-
+      }
 
       mounts {
           target    = "/var/run/docker.sock"
@@ -67,18 +61,13 @@ resource "docker_service" "portainer" {
       
       command  = ["/portainer"]
       args     = ["-H tcp://tasks.portainer_agent:9001 --tlsskipverify"]
-#      hostname = ""
-    }
-
+    }  
     placement {
       constraints = ["node.role==manager"]
     }
-    }  
+    networks = ["${docker_network.port-network.id}","${docker_network.traefik.id}"]
   }
   
-  networks     = ["${docker_network.port-network.id}"]
-  networks     = ["${docker_network.traefik.id}"]
-
   endpoint_spec {
     ports {
       target_port     = "9000"
