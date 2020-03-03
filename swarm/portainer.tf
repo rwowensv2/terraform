@@ -14,7 +14,7 @@ resource "docker-network" "traefik" {
 }
 
 resource "docker_service" "portainer_agent" {
-  name = "portainer-agent"
+  name = "portainer_agent"
 
 #    - name: create portainer network
 #      docker_network:
@@ -65,8 +65,8 @@ resource "docker_service" "portainer" {
           type      = "bind"
       }
       
-      command  = ["/portainer"]
-      args     = ["-H tcp://tasks.portainer_agent:9001 --tlsskipverify"]
+      command  = ["/portainer", "-H", "tcp://tasks.portainer_agent:9001", "--tlsskipverify"]
+#      args     = ["-H tcp://tasks.portainer_agent:9001 --tlsskipverify"]
 #      hostname = ""
     }
 
